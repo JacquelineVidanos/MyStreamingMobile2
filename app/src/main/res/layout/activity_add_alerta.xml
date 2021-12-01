@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".AddAlertaActivity">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+        <TextView
+            android:id="@+id/notificacion"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Avisarme cuando:"
+            android:textSize="24dp"
+            app:layout_constraintBottom_toTopOf="@+id/et_text"/>
+        <EditText
+            android:id="@+id/et_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="10dp"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/bg_edittext"
+            android:hint="0000"
+            android:inputType="number"
+            android:padding="10dp"
+            android:textSize="24dp"
+            app:layout_constraintBottom_toTopOf="@+id/etNotificacion"/>
+
+        <Button
+            android:id="@+id/btnNotificacion"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="20dp"
+            android:onClick="volleyPost"
+            android:padding="10dp"
+            android:text="Crear Alerta"/>
+
+    </LinearLayout>
+
+
+
+
+</androidx.core.widget.NestedScrollView>
