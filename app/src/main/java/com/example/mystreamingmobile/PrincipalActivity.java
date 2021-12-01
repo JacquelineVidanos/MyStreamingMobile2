@@ -2,6 +2,7 @@ package com.example.mystreamingmobile;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -25,8 +26,7 @@ import com.android.volley.toolbox.HurlStack;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
-import org.json.JSONArray;
-import org.json.JSONObject;
+
 
 public class PrincipalActivity extends AppCompatActivity {
     private String nombre;
@@ -35,6 +35,8 @@ public class PrincipalActivity extends AppCompatActivity {
     private TextView tvNum;
     private RequestQueue conexionServidor;
     private StringRequest peticionServidor;
+    private int num;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,6 +50,8 @@ public class PrincipalActivity extends AppCompatActivity {
         tvNum = findViewById((R.id.textView3));
         tvJugador.setText("Bienvenido " + nombre); // se inserta el nombre del jugador en la vista
         consultaAlertas();
+
+
 
     }//termina onCreate
 
@@ -74,6 +78,7 @@ public class PrincipalActivity extends AppCompatActivity {
                     @Override
                     public void onResponse(String response) {
                         tvNum.setText(""+response.toString());
+                        num=Integer.parseInt(response);
                     }
                 },
                 new Response.ErrorListener() {
@@ -88,7 +93,8 @@ public class PrincipalActivity extends AppCompatActivity {
 
     }
     public void Siguiente(View view) {
-        startActivity(new Intent(PrincipalActivity.this,AlertasActivity.class));
+        startActivity(new Intent(PrincipalActivity.this, AlertasActivity.class)//.putExtra("nombre", nombre) // estoy usando un putExtra de más?
+                .putExtra("numS", num));
     }
     @Override
     public void onBackPressed() {

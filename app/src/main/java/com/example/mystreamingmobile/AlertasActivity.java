@@ -2,8 +2,16 @@ package com.example.mystreamingmobile;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Intent;
+import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
+
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.view.View;
@@ -20,6 +28,11 @@ import com.android.volley.toolbox.Volley;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
+import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 
 import java.util.ArrayList;
 
@@ -28,9 +41,14 @@ public class AlertasActivity extends AppCompatActivity {
     private ListView lvRanking;
     private ArrayAdapter<String> adaptador;
     private ArrayList<String> listarRanking;
+    private int nS;
+    private int nM;
 
     private RequestQueue conexionServidor;
     private StringRequest peticionServidor;
+    //creacion de variables para las notificaciones
+    private final static String CHANNEL_ID = "NOTIFICACION";
+    private final static int NOTIFICACION_ID = 0;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -38,6 +56,8 @@ public class AlertasActivity extends AppCompatActivity {
         srlRanking = findViewById(R.id.srl_ranking);
         lvRanking = findViewById(R.id.lv_ranking);
         listarRanking = new ArrayList<>();
+
+        nS = getIntent().getIntExtra("numS",0);
 
         // ligar contenido con el arrayadapter
         adaptador = new ArrayAdapter<>(this,
@@ -68,6 +88,10 @@ public class AlertasActivity extends AppCompatActivity {
                 consultaAlertas();
             }
         });
+
+
+
+
     }//termina onCreate
     // Metodo que consume el servicio qeu retorna la lsita de Ranking
     public void consultaAlertas() {
@@ -87,25 +111,44 @@ public class AlertasActivity extends AppCompatActivity {
                         // intentar convertir response en objeto json
                         try {
                             JSONArray objResp = new JSONArray(response);
-                            //JSONArray objResp = response.("paises");
-// Este solo se usa si quiero llamar otro objeto del json -------- el toast devuelve pues un toast con la info del json {[{json}]}
-//                            Toast.makeText(RankingActivity.this,
-//                                    objResp.getString("mensaje"), // devuelve "mensaje" del json que fue declarado en el controlador ej. mensaje: hola
-//                                    Toast.LENGTH_LONG).show();
-
-                            // Tomar el arreglo de la posición "lista_score"
-                            //JSONObject obtenRanking = objResp.getJSONObject(0); // lista_score es el nombre el objteto en el json (ej ranking [{1, paco, 220}, {2, luis, 330}]
-
-                            // eliminar el contenido anterior para evitar duplicas del mismo
                             listarRanking.clear();
-
-
-                            // hacer for paraa agregar los objetos en la lista del adaptador
                             for(int i = 0 ; i < objResp.length() ; i++) {
                                 //creamos un objeto para cada elemento
                                 JSONObject ranking2 = objResp.getJSONObject(i);
                                 //JSONObject ranking2 = obtenRanking.getJSONObject(i);
                                 // Agregamos los valores a la lista del adaptador
+                                if(nS>=ranking2.getInt("meta_suscriptores")){
+                                    //llamar al metodo de creacion de la notificacion
+                                    createNotificationChannel();
+
+                                    NotificationCompat.Builder builder = new NotificationCompat.Builder(getApplicationContext(), CHANNEL_ID);
+
+                                    //se agrega la parte del reloj
+                                    NotificationCompat.WearableExtender wearableExtender = new NotificationCompat.WearableExtender().setHintHideIcon(true);
+
+                                    builder.setSmallIcon(R.mipmap.ic_launcher);
+                                    builder.setContentTitle("¡Hey, Raúl!");
+                                    builder.setContentText("Haz alcanzado los "+nS+" suscriptores, felicidades.");
+                                    builder.setColor(Color.BLUE);
+                                    builder.setPriority(NotificationCompat.PRIORITY_DEFAULT);
+                                    builder.setLights(Color.MAGENTA, 1000, 1000);
+                                    builder.setVibrate(new long[]{1000,1000,1000,1000,1000});
+                                    builder.setDefaults(Notification.DEFAULT_SOUND);
+                                    //se vincula con el reloj
+                                    builder.extend(wearableExtender);
+
+                                    NotificationManagerCompat notificationManagerCompat = NotificationManagerCompat.from(getApplicationContext());
+                                    notificationManagerCompat.notify(NOTIFICACION_ID, builder.build());
+
+
+                                    //PendingIntent pendingIntent = PendingIntent.getActivity(AlertasActivity.this,0,intent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+                                    //builder.setContentIntent(pendingIntent);
+
+                                    NotificationManager nm = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+                                    nm.notify(NOTIFICACION_ID, builder.build());
+
+                                }
                                 listarRanking.add(
                                         "Alerta "+ranking2.getInt("id") + ". Avisarme cuando llegue a: " + ranking2.getInt("meta_suscriptores") + " suscriptores. Número actual de suscriptores: " + ranking2.getInt ("num_suscriptores")+ "."); //getString, getInt
                             }
@@ -147,4 +190,13 @@ public class AlertasActivity extends AppCompatActivity {
     public void IrAddAlerta(View view) {
         startActivity(new Intent(AlertasActivity.this,AddAlertaActivity.class));
     }
+    private void createNotificationChannel(){
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
+            CharSequence name = "Notificación";
+            NotificationChannel notificationChannel = new NotificationChannel(CHANNEL_ID, name, NotificationManager.IMPORTANCE_DEFAULT);
+            NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+            notificationManager.createNotificationChannel(notificationChannel);
+        }
+    }
+
 }
