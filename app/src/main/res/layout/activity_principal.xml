@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".PrincipalActivity">
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Bienvenido"
+        android:layout_gravity="center"
+        android:textSize="28dp"
+        android:textColor="#E2676767"
+        android:layout_margin="5dp"
+        android:textStyle="bold"/>
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Número de suscriptores:"
+        android:layout_gravity="center"
+        android:textSize="22dp"
+        android:textColor="#E2676767"
+        android:layout_margin="5dp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/textView3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="0000"
+        android:layout_gravity="center"
+        android:textSize="22dp"
+        android:textColor="#E2676767"
+        android:layout_margin="5dp"
+        android:textStyle="bold"/>
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="88dp"
+        android:layout_height="58dp"
+        app:srcCompat="@drawable/ic_alert"
+        tools:layout_editor_absoluteX="145dp"
+        tools:layout_editor_absoluteY="235dp"
+        android:layout_gravity="center"/>
+
+    <Button
+        android:id="@+id/button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="Alertas"
+        android:onClick="Siguiente"/>
+</LinearLayout>
